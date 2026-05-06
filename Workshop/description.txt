@@ -1,0 +1,71 @@
+[h1]Impatient Commuters[/h1]
+
+Makes waiting passengers more likely to leave an overcrowded stop and find another route — probability grows the longer they wait, and varies by age and trip purpose.
+
+[h1]What it does[/h1]
+
+The vanilla game already has a boredom system: passengers who wait too long eventually give up and try to reach their destination another way. But there is no crowd awareness — a passenger standing alone at an empty stop and one packed into a crowd of fifty behave identically.
+
+This mod adds crowd-based impatience on top of the vanilla system. When a stop has [b]more waiting passengers than the average capacity of the vehicles serving it[/b], each waiting citizen gains a small per-step chance of giving up that [b]grows quadratically with their wait time[/b].
+
+[b]Formula:[/b] [i]p = 8% × (wait / max)² × age factor × destination factor[/i]
+
+A citizen at half their patience limit has roughly a 2% chance per frame of leaving. At the limit it reaches 8%. Short waits and uncrowded stops are not affected at all.
+
+[h1]Age groups[/h1]
+
+Each age group has a configurable patience level (Very Patient → Very Impatient). Defaults:
+
+[list]
+[*][b]Children[/b] — Patient (×0.7): children tend to wait quietly.
+[*][b]Teenagers[/b] — Normal (×1.0)
+[*][b]Young adults[/b] — Normal (×1.0)
+[*][b]Adults[/b] — Normal (×1.0)
+[*][b]Seniors[/b] — Impatient (×1.3): less tolerance for crowded stops.
+[/list]
+
+[h1]Trip purpose[/h1]
+
+When enabled, the mod scales impatience based on where the citizen is going:
+
+[list]
+[*][b]Going to work[/b] — much less likely to give up (×0.4)
+[*][b]Going to school[/b] — reluctant to give up (×0.5)
+[*][b]Going home[/b] — slightly patient (×0.7)
+[*][b]Leisure / shopping[/b] — slightly impatient (×1.1)
+[*][b]Tourists[/b] — most flexible, no fixed schedule (×1.3)
+[/list]
+
+[h1]Capacity threshold[/h1]
+
+The threshold is the [b]average passenger capacity of all active vehicles on the line[/b] multiplied by the configurable [b]Threshold Multiplier[/b] (default ×1.0). A busy bus line with 12-seat minibuses gets a much lower threshold than a metro line with 180-seat trains. If no vehicles are deployed on a line yet, the threshold is effectively infinite — the mod has no effect until vehicles are on the road.
+
+[h1]Settings[/h1]
+
+Open [b]Options → Impatient Commuters[/b]:
+
+[list]
+[*][b]Enable mod[/b] — master on/off switch.
+[*][b]Capacity threshold[/b] — multiplier on average vehicle capacity (0.5×–2.0×). Raise it to only trigger at very full stops; lower it to trigger sooner.
+[*][b]Scale by trip purpose[/b] — toggle the destination-based factor.
+[*][b]Patience per age group[/b] — five preset levels per age group (Very Patient ×0.5 → Very Impatient ×1.6).
+[*][b]Debug logging[/b] — logs each forced departure to the game log with stop ID, crowd count, and probability.
+[/list]
+
+[h1]Compatibility[/h1]
+
+[list]
+[*]Compatible with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1776052533]Stops and Stations[/url] by dymanoid — both mods check the BoredOfWaiting flag before acting, so there is no double-firing.
+[*]Compatible with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=424106600]Improved Public Transport Essentials[/url] — no dependency, works standalone.
+[*]No Harmony patches used. Pure simulation hook via ICities ThreadingExtensionBase.
+[/list]
+
+[h1]Requirements[/h1]
+
+[list]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2040656402]Harmony (Mod Dependency)[/url] — subscribe and enable this first.
+[/list]
+
+[h1]Source code[/h1]
+
+[url=https://github.com/roberto-naharro/ImpatientCommuters]github.com/roberto-naharro/ImpatientCommuters[/url]
