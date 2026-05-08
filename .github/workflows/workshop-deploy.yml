@@ -1,7 +1,7 @@
 name: Deploy to Steam Workshop
 
 # Triggers on v* tag (from Release Please) or manually.
-# Builds the mod from source in CI (game reference DLLs referenced from sibling IPTE repo).
+# Builds the mod from source in CI. GameReferences/ and packages/ live in this repo.
 #
 # Required secrets (environment: PRO):
 #   STEAM_CONFIG_VDF   — base64-encoded ~/.steam/steamcmd/config/config.vdf
@@ -29,20 +29,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Checkout game references (IPTE sibling repo)
-        uses: actions/checkout@v4
-        with:
-          repository: roberto-naharro/ImprovedPublicTransport
-          path: ImprovedPublicTransportEssentials
-          sparse-checkout: |
-            GameReferences
-            packages
-          sparse-checkout-cone-mode: false
-
       - name: Install Mono
         run: |
           sudo apt-get update
           sudo apt-get install -y mono-complete mono-xbuild
+
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore packages.config -PackagesDirectory packages
 
       - name: Inject version into AssemblyInfo.cs
         run: |

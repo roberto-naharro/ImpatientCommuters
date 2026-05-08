@@ -34,26 +34,26 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CitiesHarmony.API">
-      <HintPath>..\ImprovedPublicTransportEssentials\packages\CitiesHarmony.API.2.1.0\lib\net35\CitiesHarmony.API.dll</HintPath>
+      <HintPath>packages\CitiesHarmony.API.2.1.0\lib\net35\CitiesHarmony.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CitiesHarmony.Harmony">
-      <HintPath>..\ImprovedPublicTransportEssentials\packages\CitiesHarmony.Harmony.2.2.0\lib\net35\CitiesHarmony.Harmony.dll</HintPath>
+      <HintPath>packages\CitiesHarmony.Harmony.2.2.0\lib\net35\CitiesHarmony.Harmony.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="ColossalManaged">
-      <HintPath>..\ImprovedPublicTransportEssentials\GameReferences\ColossalManaged.dll</HintPath>
+      <HintPath>GameReferences\ColossalManaged.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\ImprovedPublicTransportEssentials\GameReferences\UnityEngine.dll</HintPath>
+      <HintPath>GameReferences\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="ICities">
-      <HintPath>..\ImprovedPublicTransportEssentials\GameReferences\ICities.dll</HintPath>
+      <HintPath>GameReferences\ICities.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\ImprovedPublicTransportEssentials\GameReferences\Assembly-CSharp.dll</HintPath>
+      <HintPath>GameReferences\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

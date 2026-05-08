@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # deploy.sh — Build Impatient Commuters and copy to the game's Mods folder.
 #
-# Reads configuration from .env in the repo root (copy from IPTE's .env).
+# Reads configuration from .env in the repo root.
+# See .env.example for required variables.
 #
 # Usage:
 #   ./deploy.sh           → Debug build

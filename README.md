@@ -20,7 +20,7 @@ p = (balkComponent + frustrationComponent) × freqFactor × multiLineFactor
   balkComponent        = 0.12 × crowdRatio × e^(−8t) × ageBalkFactor × destBalkFactor
   frustrationComponent = 0.08 × t²          × ageFrustFactor × destFrustFactor
   crowdRatio           = clamp((passengers − threshold) / threshold, 0, 1)
-  freqFactor           = clamp(√(2 / vehicleCount), 0.3, ∞)   [1.0 at 2 vehicles, ≈0.71 at 4]
+  freqFactor           = clamp(√((stopCount / vehicleCount) / 5), 0.30, 3.0)
   multiLineFactor      = 1.15 if another line stops within 150 m, else 1.0
 ```
 
@@ -126,8 +126,8 @@ Open **Options → Impatient Commuters** in-game.
 
 ```bash
 # Prerequisites: Mono, xbuild
-# References point to ../ImprovedPublicTransportEssentials/GameReferences/
-# Copy .env from ImprovedPublicTransportEssentials or create your own.
+# Game DLLs are in GameReferences/ (committed). Harmony packages are in packages/.
+# Copy .env.example to .env and fill in your machine's values.
 
 xbuild ImpatientCommuters.csproj /p:Configuration=Release /nologo /verbosity:quiet
 

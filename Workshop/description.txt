@@ -1,78 +1,98 @@
 [h1]Impatient Commuters[/h1]
 
-Makes waiting passengers more likely to leave an overcrowded stop and find another route. Probability is shaped by two research-backed behavioural effects (balking on arrival and frustration over time) and is modified by age, trip purpose, line frequency, and whether alternative stops are nearby.
+Makes waiting passengers more likely to leave an overcrowded stop and find another route. Probability is highest the moment a citizen arrives at a crowded stop, then fades as their wait builds, then rises again with frustration. All shaped by age, trip purpose, line frequency, and nearby alternatives.
 
 [h1]What it does[/h1]
 
 The vanilla game already has a boredom system: passengers who wait too long eventually give up. But there is no crowd awareness. A passenger standing alone at an empty stop and one packed into a crowd of fifty behave identically.
 
-This mod adds crowd-based impatience on top of the vanilla system. When a stop has [b]more waiting passengers than the average capacity of the vehicles serving it[/b], each waiting citizen gains a small per-step chance of giving up. Two distinct behavioural effects combine:
+This mod adds crowd-based impatience on top of the vanilla system. When a stop is more crowded than the vehicles serving it can comfortably handle, waiting citizens start weighing whether to leave and find another route. Two distinct behavioural effects combine:
 
 [list]
-[*][b]Balking[/b] — a citizen who [i]just arrived[/i] at a heavily overcrowded stop is likely to turn around immediately. This probability decays as time passes: the longer someone has already waited, the less likely they are to abandon (sunk-cost effect). Supported by queuing theory (Haight 1959) and transit studies (Liu et al. 2022).
-[*][b]Frustration[/b] — a slower quadratic curve that builds with accumulated wait time. Represents the classical boredom and irritation of a long wait at a crowded stop.
+[*][b]Balking.[/b] A citizen who [i]just arrived[/i] at a heavily overcrowded stop is likely to turn around immediately. The longer they have already waited, the less likely they are to abandon. Nobody wants to give up after standing there for five minutes.
+[*][b]Frustration.[/b] A slower effect that builds with accumulated wait time, representing the classic impatience of a long wait in a crowd.
 [/list]
 
 [h1]Modifiers[/h1]
 
 [h2]Age[/h2]
 
-Each behavioural component is scaled separately by age group. Balk factors are fixed (research-backed); frustration factors are fully configurable in settings.
+Each behavioural component is scaled separately by age group. Both balking sensitivity and long-wait patience are fully configurable in settings, with a restore-to-defaults button for each.
 
 [list]
-[*][b]Balk — Seniors ×1.4, Teens ×1.2[/b]: seniors have the highest crowding sensitivity (physical discomfort); teenagers are the most likely to check their phone and reroute immediately.
-[*][b]Balk — Children ×0.5[/b]: children have low agency and rarely make independent rerouting decisions.
-[*][b]Frustration — configurable per group[/b]: default range from Patient (×0.7 for children) to Impatient (×1.3 for seniors). Five preset levels from Very Patient (×0.5) to Very Impatient (×1.6).
+[*][b]Crowding sensitivity on arrival (balking).[/b] Seniors and teenagers are the most likely to turn around at a packed stop. Children are the least (they follow an adult and rarely reroute independently).
+[*][b]Long-wait patience (frustration).[/b] Seniors grow restless faster than average; children are more patient. All five age groups are configurable.
 [/list]
 
 [h2]Trip purpose[/h2]
 
-When enabled, balk and frustration are scaled in [b]opposite directions[/b] by where the citizen is going — reflecting the real difference between knowing you have alternatives vs. knowing you must arrive.
+When enabled, balking and frustration work in [b]opposite directions[/b] depending on where the citizen is going. Someone heading to work is more likely to immediately seek an alternative when they see a crowd, but far less likely to give up the longer they wait (they have to arrive). A tourist is the reverse: unfamiliar with the network so they tend to stay put at first, but they have no fixed schedule so frustration builds quickly.
 
 [list]
-[*][b]Going to work[/b] — high balk (×1.2, commuters plan alternatives), low frustration (×0.4, must arrive).
-[*][b]Going to school[/b] — moderate balk (×0.8), low frustration (×0.5).
-[*][b]Going home[/b] — mild balk (×0.9), moderate frustration (×0.7).
-[*][b]Leisure / shopping[/b] — neutral balk (×1.0), slightly higher frustration (×1.1).
-[*][b]Tourists[/b] — low balk (×0.7, don't know alternatives), high frustration (×1.3, no fixed schedule).
+[*][b]Going to work.[/b] High balking, low frustration.
+[*][b]Going to school.[/b] Moderate balking, low frustration.
+[*][b]Going home.[/b] Mild balking, moderate frustration.
+[*][b]Leisure / shopping.[/b] Neutral balking, slightly higher frustration.
+[*][b]Tourists.[/b] Low balking, high frustration.
 [/list]
 
 [h2]Line frequency[/h2]
 
-Headway depends on both the number of vehicles [b]and[/b] the length of the line. A single bus covering 3 stops completes its circuit quickly; the same bus on a 100-stop line barely comes back. The mod uses stop count as a proxy for circuit length: [i]factor = √(stops ÷ vehicles ÷ 5)[/i]. A metro with 6 stops and 4 trains (×0.55) keeps passengers far more patient than a single bus on a long cross-city route (×2.0 or higher). Maximum cap ×3.0, minimum floor ×0.30.
+Passengers on a busy metro that comes every two minutes behave very differently from those waiting for a single bus on a long cross-city route. The mod accounts for both the number of vehicles on the line and its length: a frequent, short metro keeps passengers far more patient than a single bus servicing dozens of stops.
 
 [h2]Alternative lines nearby[/h2]
 
-If another transport line has a stop within 150 m, every citizen at the overcrowded stop gets a [b]×1.15 bonus[/b] on their total probability. Knowing a viable alternative is close by makes leaving significantly more appealing.
+If another transport line has a stop within 150 m, every citizen at the overcrowded stop becomes noticeably more willing to leave. Knowing a viable alternative is close by makes rerouting a real option rather than a gamble.
 
 [h1]Capacity threshold[/h1]
 
-The mod only activates when [b]passenger count ≥ average vehicle capacity × Threshold Multiplier[/b]. A busy minibus line with 12-seat vehicles triggers at much lower crowd levels than a metro line with 180-seat trains. If no vehicles are deployed yet, the threshold is infinite — the mod has no effect until vehicles are on the road.
+The mod only activates when a stop is genuinely overcrowded relative to the vehicles serving it. A minibus line triggers at much lower crowd levels than a metro line with large trains. If no vehicles are deployed yet, the mod has no effect until they are on the road. The threshold is adjustable in settings.
 
 [h1]Settings[/h1]
 
-Open [b]Options → Impatient Commuters[/b]:
+Open [b]Options → Impatient Commuters[/b].
 
+[b]General[/b]
 [list]
-[*][b]Enable mod[/b] — master on/off switch.
-[*][b]Capacity threshold[/b] — multiplier on average vehicle capacity (0.5×–2.0×). Raise it to only trigger at very full stops; lower it to trigger sooner.
-[*][b]Scale by trip purpose[/b] — toggle the destination-based balk and frustration factors.
-[*][b]Patience per age group[/b] — five preset levels per age group for the frustration component.
-[*][b]Debug logging[/b] — logs each forced departure to the game log with stop ID, crowd count, and probability.
+[*][b]Enable mod.[/b] Master on/off switch.
+[*][b]Capacity threshold.[/b] Controls how crowded a stop needs to be before the mod activates. Raise it to only trigger at very full stops; lower it to trigger sooner.
+[*][b]Scale by trip purpose.[/b] Enables destination-aware balking and frustration.
+[/list]
+
+[b]Behaviour components[/b] (each can be toggled independently)
+[list]
+[*][b]Balking.[/b] The on-arrival crowd-deterrence effect.
+[*][b]Frequency scaling.[/b] Lines with shorter headways make passengers less inclined to leave.
+[*][b]Alternative line bonus.[/b] Citizens near another line's stop are more willing to reroute.
+[/list]
+
+[b]How long each age group waits before giving up[/b] (frustration)
+[list]
+[*]Per-age dropdown from Very Patient to Very Impatient, with a Restore defaults button.
+[/list]
+
+[b]How likely each age group is to leave immediately on seeing a crowded stop[/b] (balking)
+[list]
+[*]Per-age dropdown from Very Low to Very High, with a Restore defaults button.
+[/list]
+
+[b]Debug[/b]
+[list]
+[*][b]Debug logging.[/b] Logs each forced departure to the game log.
 [/list]
 
 [h1]Compatibility[/h1]
 
 [list]
-[*]Compatible with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1776052533]Stops and Stations[/url] by dymanoid — both mods check the BoredOfWaiting flag before acting, so there is no double-firing.
-[*]Compatible with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=424106600]Improved Public Transport Essentials[/url] — no dependency, works standalone.
-[*]Pairs well with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=TODO]Better Train Boarding[/url] — that mod fixes boarding so passengers prefer the closest carriage and trains don't jam; this mod handles the platform side by making people at overcrowded stops decide to reroute. Together they produce much more realistic rail flow.
+[*]Compatible with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1776052533]Stops and Stations[/url] by dymanoid. Both mods work independently and do not double-fire.
+[*]Compatible with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=424106600]Improved Public Transport Essentials[/url]. No dependency, works standalone.
+[*]Pairs well with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2773460744]Better Train Boarding[/url]. That mod makes passengers board the closest carriage so trains load efficiently; this mod handles the platform side by making people at overcrowded stops decide to reroute. Together they produce much more realistic rail flow.
 [/list]
 
 [h1]Requirements[/h1]
 
 [list]
-[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2040656402]Harmony (Mod Dependency)[/url] — subscribe and enable this first.
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2040656402]Harmony (Mod Dependency)[/url]. Subscribe and enable this first.
 [/list]
 
 [h1]Source code[/h1]
