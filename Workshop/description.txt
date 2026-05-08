@@ -1,44 +1,53 @@
 [h1]Impatient Commuters[/h1]
 
-Makes waiting passengers more likely to leave an overcrowded stop and find another route — probability grows the longer they wait, and varies by age and trip purpose.
+Makes waiting passengers more likely to leave an overcrowded stop and find another route. Probability is shaped by two research-backed behavioural effects (balking on arrival and frustration over time) and is modified by age, trip purpose, line frequency, and whether alternative stops are nearby.
 
 [h1]What it does[/h1]
 
-The vanilla game already has a boredom system: passengers who wait too long eventually give up and try to reach their destination another way. But there is no crowd awareness — a passenger standing alone at an empty stop and one packed into a crowd of fifty behave identically.
+The vanilla game already has a boredom system: passengers who wait too long eventually give up. But there is no crowd awareness. A passenger standing alone at an empty stop and one packed into a crowd of fifty behave identically.
 
-This mod adds crowd-based impatience on top of the vanilla system. When a stop has [b]more waiting passengers than the average capacity of the vehicles serving it[/b], each waiting citizen gains a small per-step chance of giving up that [b]grows quadratically with their wait time[/b].
-
-[b]Formula:[/b] [i]p = 8% × (wait / max)² × age factor × destination factor[/i]
-
-A citizen at half their patience limit has roughly a 2% chance per frame of leaving. At the limit it reaches 8%. Short waits and uncrowded stops are not affected at all.
-
-[h1]Age groups[/h1]
-
-Each age group has a configurable patience level (Very Patient → Very Impatient). Defaults:
+This mod adds crowd-based impatience on top of the vanilla system. When a stop has [b]more waiting passengers than the average capacity of the vehicles serving it[/b], each waiting citizen gains a small per-step chance of giving up. Two distinct behavioural effects combine:
 
 [list]
-[*][b]Children[/b] — Patient (×0.7): children tend to wait quietly.
-[*][b]Teenagers[/b] — Normal (×1.0)
-[*][b]Young adults[/b] — Normal (×1.0)
-[*][b]Adults[/b] — Normal (×1.0)
-[*][b]Seniors[/b] — Impatient (×1.3): less tolerance for crowded stops.
+[*][b]Balking[/b] — a citizen who [i]just arrived[/i] at a heavily overcrowded stop is likely to turn around immediately. This probability decays as time passes: the longer someone has already waited, the less likely they are to abandon (sunk-cost effect). Supported by queuing theory (Haight 1959) and transit studies (Liu et al. 2022).
+[*][b]Frustration[/b] — a slower quadratic curve that builds with accumulated wait time. Represents the classical boredom and irritation of a long wait at a crowded stop.
 [/list]
 
-[h1]Trip purpose[/h1]
+[h1]Modifiers[/h1]
 
-When enabled, the mod scales impatience based on where the citizen is going:
+[h2]Age[/h2]
+
+Each behavioural component is scaled separately by age group. Balk factors are fixed (research-backed); frustration factors are fully configurable in settings.
 
 [list]
-[*][b]Going to work[/b] — much less likely to give up (×0.4)
-[*][b]Going to school[/b] — reluctant to give up (×0.5)
-[*][b]Going home[/b] — slightly patient (×0.7)
-[*][b]Leisure / shopping[/b] — slightly impatient (×1.1)
-[*][b]Tourists[/b] — most flexible, no fixed schedule (×1.3)
+[*][b]Balk — Seniors ×1.4, Teens ×1.2[/b]: seniors have the highest crowding sensitivity (physical discomfort); teenagers are the most likely to check their phone and reroute immediately.
+[*][b]Balk — Children ×0.5[/b]: children have low agency and rarely make independent rerouting decisions.
+[*][b]Frustration — configurable per group[/b]: default range from Patient (×0.7 for children) to Impatient (×1.3 for seniors). Five preset levels from Very Patient (×0.5) to Very Impatient (×1.6).
 [/list]
+
+[h2]Trip purpose[/h2]
+
+When enabled, balk and frustration are scaled in [b]opposite directions[/b] by where the citizen is going — reflecting the real difference between knowing you have alternatives vs. knowing you must arrive.
+
+[list]
+[*][b]Going to work[/b] — high balk (×1.2, commuters plan alternatives), low frustration (×0.4, must arrive).
+[*][b]Going to school[/b] — moderate balk (×0.8), low frustration (×0.5).
+[*][b]Going home[/b] — mild balk (×0.9), moderate frustration (×0.7).
+[*][b]Leisure / shopping[/b] — neutral balk (×1.0), slightly higher frustration (×1.1).
+[*][b]Tourists[/b] — low balk (×0.7, don't know alternatives), high frustration (×1.3, no fixed schedule).
+[/list]
+
+[h2]Line frequency[/h2]
+
+Headway depends on both the number of vehicles [b]and[/b] the length of the line. A single bus covering 3 stops completes its circuit quickly; the same bus on a 100-stop line barely comes back. The mod uses stop count as a proxy for circuit length: [i]factor = √(stops ÷ vehicles ÷ 5)[/i]. A metro with 6 stops and 4 trains (×0.55) keeps passengers far more patient than a single bus on a long cross-city route (×2.0 or higher). Maximum cap ×3.0, minimum floor ×0.30.
+
+[h2]Alternative lines nearby[/h2]
+
+If another transport line has a stop within 150 m, every citizen at the overcrowded stop gets a [b]×1.15 bonus[/b] on their total probability. Knowing a viable alternative is close by makes leaving significantly more appealing.
 
 [h1]Capacity threshold[/h1]
 
-The threshold is the [b]average passenger capacity of all active vehicles on the line[/b] multiplied by the configurable [b]Threshold Multiplier[/b] (default ×1.0). A busy bus line with 12-seat minibuses gets a much lower threshold than a metro line with 180-seat trains. If no vehicles are deployed on a line yet, the threshold is effectively infinite — the mod has no effect until vehicles are on the road.
+The mod only activates when [b]passenger count ≥ average vehicle capacity × Threshold Multiplier[/b]. A busy minibus line with 12-seat vehicles triggers at much lower crowd levels than a metro line with 180-seat trains. If no vehicles are deployed yet, the threshold is infinite — the mod has no effect until vehicles are on the road.
 
 [h1]Settings[/h1]
 
@@ -47,8 +56,8 @@ Open [b]Options → Impatient Commuters[/b]:
 [list]
 [*][b]Enable mod[/b] — master on/off switch.
 [*][b]Capacity threshold[/b] — multiplier on average vehicle capacity (0.5×–2.0×). Raise it to only trigger at very full stops; lower it to trigger sooner.
-[*][b]Scale by trip purpose[/b] — toggle the destination-based factor.
-[*][b]Patience per age group[/b] — five preset levels per age group (Very Patient ×0.5 → Very Impatient ×1.6).
+[*][b]Scale by trip purpose[/b] — toggle the destination-based balk and frustration factors.
+[*][b]Patience per age group[/b] — five preset levels per age group for the frustration component.
 [*][b]Debug logging[/b] — logs each forced departure to the game log with stop ID, crowd count, and probability.
 [/list]
 
@@ -57,7 +66,7 @@ Open [b]Options → Impatient Commuters[/b]:
 [list]
 [*]Compatible with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1776052533]Stops and Stations[/url] by dymanoid — both mods check the BoredOfWaiting flag before acting, so there is no double-firing.
 [*]Compatible with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=424106600]Improved Public Transport Essentials[/url] — no dependency, works standalone.
-[*]No Harmony patches used. Pure simulation hook via ICities ThreadingExtensionBase.
+[*]Pairs well with [url=https://steamcommunity.com/sharedfiles/filedetails/?id=TODO]Better Train Boarding[/url] — that mod fixes boarding so passengers prefer the closest carriage and trains don't jam; this mod handles the platform side by making people at overcrowded stops decide to reroute. Together they produce much more realistic rail flow.
 [/list]
 
 [h1]Requirements[/h1]

@@ -18,14 +18,30 @@ namespace ImpatientCommuters
         public float ThresholdMultiplier = 1.0f;
         public bool DestinationFactorEnabled = true;
 
-        // Per-age patience indices (0=Very Patient … 4=Very Impatient)
-        public int AgeFactorChild      = 1; // Patient  (×0.7)
-        public int AgeFactorTeen       = 2; // Normal   (×1.0)
-        public int AgeFactorYoungAdult = 2; // Normal   (×1.0)
-        public int AgeFactorAdult      = 2; // Normal   (×1.0)
+        // Behaviour component toggles
+        public bool BalkingEnabled            = true;
+        public bool FrequencyScalingEnabled   = true;
+        public bool AlternativeLineBonusEnabled = true;
+
+        // Per-age frustration indices (0=Very Patient … 4=Very Impatient)
+        // Controls how quickly accumulated wait time turns into abandonment.
+        public int AgeFactorChild      = 1; // Patient   (×0.7)
+        public int AgeFactorTeen       = 2; // Normal    (×1.0)
+        public int AgeFactorYoungAdult = 2; // Normal    (×1.0)
+        public int AgeFactorAdult      = 2; // Normal    (×1.0)
         public int AgeFactorSenior     = 3; // Impatient (×1.3)
 
+        // Per-age balk indices (0=Very Low … 4=Very High)
+        // Controls sensitivity to crowding at the moment of arrival.
+        // Defaults derived from Lu et al. 2024 and Fan et al. 2016.
+        public int AgeBalkChild      = 0; // Very Low (×0.5) — low agency, accompanies adult
+        public int AgeBalkTeen       = 3; // High     (×1.3) — impulsive, checks alternatives
+        public int AgeBalkYoungAdult = 2; // Normal   (×1.0) — deliberate rerouting
+        public int AgeBalkAdult      = 2; // Normal   (×1.0) — experienced commuter
+        public int AgeBalkSenior     = 3; // High     (×1.3) — crowding discomfort
+
         public static readonly float[] PatienceMultipliers = { 0.5f, 0.7f, 1.0f, 1.3f, 1.6f };
+
         public static readonly string[] PatienceLabels =
         {
             "Very Patient (×0.5)",
@@ -34,6 +50,22 @@ namespace ImpatientCommuters
             "Impatient (×1.3)",
             "Very Impatient (×1.6)"
         };
+
+        public static readonly string[] BalkLabels =
+        {
+            "Very Low (×0.5)",
+            "Low (×0.7)",
+            "Normal (×1.0)",
+            "High (×1.3)",
+            "Very High (×1.6)"
+        };
+
+        // Research defaults for frustration (user-configurable above).
+        public static readonly int[] FrustrationDefaults = { 1, 2, 2, 2, 3 };
+
+        // Research defaults for balking (user-configurable above).
+        // Source: Lu et al. 2024, Fan et al. 2016.
+        public static readonly int[] BalkDefaults = { 0, 3, 2, 2, 3 };
 
         public static float GetAgeFactor(Citizen.AgeGroup group)
         {
@@ -47,6 +79,22 @@ namespace ImpatientCommuters
                 case Citizen.AgeGroup.Adult:  idx = s.AgeFactorAdult;      break;
                 case Citizen.AgeGroup.Senior: idx = s.AgeFactorSenior;     break;
                 default:                      idx = 2;                       break;
+            }
+            return PatienceMultipliers[idx];
+        }
+
+        internal static float GetAgeBalkFactor(Citizen.AgeGroup group)
+        {
+            Settings s = Instance;
+            int idx;
+            switch (group)
+            {
+                case Citizen.AgeGroup.Child:  idx = s.AgeBalkChild;      break;
+                case Citizen.AgeGroup.Teen:   idx = s.AgeBalkTeen;       break;
+                case Citizen.AgeGroup.Young:  idx = s.AgeBalkYoungAdult; break;
+                case Citizen.AgeGroup.Adult:  idx = s.AgeBalkAdult;      break;
+                case Citizen.AgeGroup.Senior: idx = s.AgeBalkSenior;     break;
+                default:                      idx = 2;                    break;
             }
             return PatienceMultipliers[idx];
         }
