@@ -31,6 +31,8 @@ MOD_NAME="ImpatientCommuters"
 BUILD_OUT="$SCRIPT_DIR/bin/$CONFIGURATION"
 
 DATA_MOUNT="${CITIES_DATA_MOUNT:-/mnt/cities_skylines_data}"
+WORKSHOP_MOUNT="${CITIES_WORKSHOP_MOUNT:-/mnt/cities_workshop}"
+WORKSHOP_ITEM_ID="${WORKSHOP_ITEM_ID:-}"
 MODS_DIR="$DATA_MOUNT/Addons/Mods/$MOD_NAME"
 LOG_FILE="$DATA_MOUNT/output_log.txt"
 
@@ -61,6 +63,20 @@ mkdir -p "$MODS_DIR"
 cp "$DIST/ImpatientCommuters.dll" "$MODS_DIR/"
 echo "Done. Files in game Mods folder:"
 ls -lh "$MODS_DIR"
+
+# ── Copy to Workshop folder (for in-game Update dialog) ──────────────────────────
+if [[ -n "$WORKSHOP_ITEM_ID" ]]; then
+    WORKSHOP_MOD_DIR="$WORKSHOP_MOUNT/content/255710/$WORKSHOP_ITEM_ID"
+    if [[ -d "$WORKSHOP_MOD_DIR" ]]; then
+        cp "$DIST/ImpatientCommuters.dll" "$WORKSHOP_MOD_DIR/"
+        cp "$SCRIPT_DIR/Workshop/PreviewImage.png" "$WORKSHOP_MOD_DIR/"
+        echo ""
+        echo "Copied to Workshop folder: $WORKSHOP_MOD_DIR"
+        ls -lh "$WORKSHOP_MOD_DIR"
+    else
+        echo "Workshop folder not found (not subscribed?): $WORKSHOP_MOD_DIR"
+    fi
+fi
 
 echo ""
 if [[ -f "$LOG_FILE" ]]; then

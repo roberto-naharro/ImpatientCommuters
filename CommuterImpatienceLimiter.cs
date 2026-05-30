@@ -134,6 +134,17 @@ namespace ImpatientCommuters
                 if (_passengerCount[nodeId] < _capacityThreshold[nodeId])
                     continue;
 
+                // Extension point: any mod can register a predicate (see Api.ImpatientCommutersApi)
+                // to exempt specific waiting citizens — e.g. School Buses keeps children waiting
+                // for their assigned school bus. No-op when nothing is registered.
+                if (Api.ImpatientCommutersApi.HasExemptions
+                    && Api.ImpatientCommutersApi.IsExempt((ushort)i, nodeId))
+                {
+                    Log.DebugLog("Citizen " + i + " exempt from impatience at stop " + nodeId
+                        + " (registered by another mod)");
+                    continue;
+                }
+
                 float t          = inst.m_waitCounter / 255f;
                 uint  citizenIdx = inst.m_citizen;
 

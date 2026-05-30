@@ -108,7 +108,28 @@ The threshold cache refreshes every ~2 seconds (64 simulation ticks) so that veh
 
 - Works standalone or alongside [Stops and Stations](https://steamcommunity.com/sharedfiles/filedetails/?id=1776052533) by dymanoid. Both mods check the `BoredOfWaiting` flag before acting, so there is no double-firing.
 - Pairs well with [Better Train Boarding](https://steamcommunity.com/sharedfiles/filedetails/?id=2773460744). BTB mod ensures passengers board the closest carriage and trains don't get jammed; this mod handles the platform side by making passengers at overcrowded stops decide to reroute. Together they produce a much more realistic rail flow.
+- Exposes an **exemption API** (see [Modder API](#modder-api)) so other mods can keep specific citizens from leaving. The companion **School Buses** mod uses it to keep children waiting for their assigned school bus.
 - Requires [Harmony (Mod Dependency)](https://steamcommunity.com/sharedfiles/filedetails/?id=2040656402).
+
+## Modder API
+
+Other mods can exempt specific waiting citizens from impatience — e.g. to keep a particular rider from giving up on a stop — without any hard dependency, via reflection:
+
+```csharp
+// Resolve the API (returns null if Impatient Commuters isn't installed).
+var api = System.Type.GetType(
+    "ImpatientCommuters.Api.ImpatientCommutersApi, ImpatientCommuters");
+
+// Register a predicate: (citizenInstanceId, stopNodeId) => exempt?
+var register = api.GetMethod("RegisterExemption",
+    new[] { typeof(System.Func<ushort, ushort, bool>) });
+System.Func<ushort, ushort, bool> predicate = MyShouldExempt;
+register.Invoke(null, new object[] { predicate });
+
+// Later: RemoveExemption(predicate) with the same delegate.
+```
+
+The predicate is evaluated on the simulation thread, once per waiting citizen that is otherwise a candidate to leave an overcrowded stop, so it must be cheap and allocation-free. Returning `true` exempts that citizen on that tick. Multiple mods can register independently; each call is guarded so a throwing predicate can't break the simulation. `GetApiVersion()` returns the contract version (currently `1`).
 
 ## Settings
 
