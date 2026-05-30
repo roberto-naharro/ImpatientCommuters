@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/roberto-naharro/ImpatientCommuters/compare/v1.2.0...v1.3.0) (2026-05-30)
+
+
+### Features
+
+* add exemption API for mod compatibility and enhance deployment scripts ([8b71e0b](https://github.com/roberto-naharro/ImpatientCommuters/commit/8b71e0bd15cebc2ab14c50e98bed19c9565e39c6))
+
 ## [1.2.0](https://github.com/roberto-naharro/ImpatientCommuters/compare/v1.1.0...v1.2.0) (2026-05-08)
 
 
